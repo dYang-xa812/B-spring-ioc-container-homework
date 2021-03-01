@@ -1,5 +1,6 @@
 package com.thoughtworks.capability.demospringioccontainer;
 
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,16 +12,16 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_SING
 @Scope(SCOPE_SINGLETON)
 public class GreetingController {
 
-    private final GreetingService greetingService;
-
     @Autowired
-    public GreetingController(GreetingService greetingService) {
-        this.greetingService = greetingService;
+    private ObjectFactory<GreetingService> greetingServiceProvider;
+
+    public GreetingService getGreetingServiceInstance() {
+        return greetingServiceProvider.getObject();
     }
 
     @GetMapping("/greet")
     public String greet() {
-        return greetingService.sayHi();
+        return getGreetingServiceInstance().sayHi();
     }
 
 }
